@@ -1,0 +1,186 @@
+﻿@page "/Employees"
+
+@using TrebasiewiczCompanyServer.Sql
+@using TrebasiewiczCompanyServer.Models
+
+@inject IEmployeeData _db
+
+<h1>Panel pracowników</h1>
+<hr />
+<h4>Dodaj pracownika</h4>
+<EditForm Model="@newEmployee" OnValidSubmit="@InsertEmployee">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    Imię:
+    <InputText id="Name" @bind-Value="newEmployee.Name" />
+    Nazwisko:
+    <InputText id="Surname" @bind-Value="newEmployee.Surname" />
+    Rola:
+    <InputText id="EmployeeType" @bind-Value="newEmployee.EmployeeType" />
+    Region:
+    <InputText id="WorkLocation" @bind-Value="newEmployee.WorkLocation" />
+
+
+    <button type="submit" class="btn btn-primary">Dodaj pracownika</button>
+
+</EditForm>
+
+<hr />
+
+<h4>Usuń pracownika</h4>
+<EditForm Model="@deleteEmployee" OnValidSubmit="@DeleteEmployee">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    ID:
+    <InputText id="ID" @bind-Value="deleteEmployee.Id" />
+
+    <button type="submit" class="btn btn-primary">Usuń pracownika</button>
+
+</EditForm>
+
+<hr />
+
+<h4>Dodaj godziny pracy</h4>
+<EditForm Model="@workingTimeUpdate" OnValidSubmit="@AddWorkingTime">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    ID Pracownika:
+    <InputText id="WorkingTimeEmployeeId" @bind-Value="workingTimeUpdate.WorkingTimeEmployeeId" />
+    Ilość godzin:
+    <InputText id="WorkingTimeValue" @bind-Value="workingTimeUpdate.WorkingTimeValue" />
+
+    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+
+</EditForm>
+
+<hr />
+
+<h4>Wypłata przepracowanych godzin</h4>
+<EditForm Model="@workingTimeReset" OnValidSubmit="@ResetWorkingTime">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    ID Pracownika:
+    <InputText id="WorkingTimeEmployeeId" @bind-Value="workingTimeReset.WorkingTimeEmployeeId" />    
+
+    <button type="submit" class="btn btn-primary">Wyzeruj godziny pracy</button>
+
+</EditForm>
+
+
+@if (employees is null)
+{
+    <p><em>Wczytywanie...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Rola</th>
+                <th>Region</th>
+                <th>Wypracowane godziny</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in employees)
+            {
+                <tr>
+                    <td>@employee.EmployeeId</td>
+                    <td>@employee.Name</td>
+                    <td>@employee.Surname</td>
+                    <td>@employee.EmployeeType</td>
+                    <td>@employee.WorkLocation</td>
+                    <td>@employee.WorkingTimeValue</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+@code {
+    private List<Employee> employees;
+    private DisplayEmployeeModel newEmployee = new DisplayEmployeeModel();
+    private DeleteEmployeeModel deleteEmployee = new DeleteEmployeeModel();
+    private WorkingTimeModel workingTimeUpdate = new WorkingTimeModel();
+    private ResetWorkingTimeModel workingTimeReset = new ResetWorkingTimeModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await _db.GetEmployees();
+    }
+
+    private async Task InsertEmployee()
+    {
+        Employee emp = new Employee
+        {
+            Name = newEmployee.Name,
+            Surname = newEmployee.Surname,
+            EmployeeType = newEmployee.EmployeeType,
+            WorkLocation = newEmployee.WorkLocation
+        };
+
+        await _db.InsertEmployee(emp);
+
+        employees.Add(emp);
+
+        newEmployee = new DisplayEmployeeModel();
+
+        employees = await _db.GetEmployees();
+    }
+    private async Task DeleteEmployee()
+    {
+        Employee emp = new Employee
+        {
+            EmployeeId = Int32.Parse(deleteEmployee.Id)
+        };
+
+
+        await _db.DeleteEmployee(emp);
+
+        employees.Remove(emp);
+
+        deleteEmployee = new DeleteEmployeeModel();
+
+        employees = await _db.GetEmployees();
+    }
+    private async Task AddWorkingTime()
+    {
+        WorkingTime wt = new WorkingTime
+        {
+            WorkingTimeEmployeeId = Int32.Parse(workingTimeUpdate.WorkingTimeEmployeeId),
+            WorkingTimeValue = Int32.Parse(workingTimeUpdate.WorkingTimeValue)
+        };
+
+        await _db.AddWorkingTime(wt);
+
+        workingTimeUpdate = new WorkingTimeModel();
+
+        employees = await _db.GetEmployees();
+
+    }
+
+    private async Task ResetWorkingTime()
+    {
+        WorkingTime wt = new WorkingTime
+        {
+            WorkingTimeEmployeeId = Int32.Parse(workingTimeReset.WorkingTimeEmployeeId)
+        };
+
+        await _db.ResetWorkingTime(wt);
+
+        workingTimeReset = new ResetWorkingTimeModel();
+
+        employees = await _db.GetEmployees();
+
+    }
+
+
+}
