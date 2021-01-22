@@ -27,7 +27,7 @@ namespace TrebasiewiczCompanyServer.Sql
         }        
         public Task InsertEmployee(Employee employee)
         {
-            string sql = @"insert into dbo.Employees values (@Name, @Surname, @EmployeeType, @WorkLocation )";
+            string sql = @"insert into dbo.Employees (Name, Surname, EmployeeType, WorkLocation) values (@Name, @Surname, @EmployeeType, @WorkLocation )";
 
             return _db.SaveData(sql, employee);
         }
