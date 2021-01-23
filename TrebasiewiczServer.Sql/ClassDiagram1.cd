@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TrebasiewiczCompanyServer.Sql.EmployeeData">
+    <Position X="5.5" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAIAhAAIAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EmployeeData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.1" />
+  </Class>
+  <Class Name="TrebasiewiczCompanyServer.Models.SqlDataAccess">
+    <Position X="10.75" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAQAAAAAAAAAAAQAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SqlDataAccess.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.466" />
+  </Class>
+  <Interface Name="TrebasiewiczCompanyServer.Sql.IEmployeeData">
+    <Position X="3" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAhAAIAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IEmployeeData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TrebasiewiczCompanyServer.Models.ISqlDataAccess">
+    <Position X="8.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAQAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISqlDataAccess.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
