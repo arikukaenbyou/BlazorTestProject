@@ -1,0 +1,23 @@
+# .NET 5 (net5.0, EOL) -- SDK instalowany skryptem dotnet-install, bo obraz
+# runnera to node:22-bookworm (actions/checkout potrzebuje node w kontenerze).
+name: build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_ROOT: /root/.dotnet
+    steps:
+      - uses: actions/checkout@v4
+      - name: .NET 5 SDK
+        run: |
+          apt-get update -qq && apt-get install -y -qq libicu-dev >/dev/null
+          curl -fsSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
+          bash dotnet-install.sh --channel 5.0 --install-dir /root/.dotnet
+          echo "/root/.dotnet" >> "$GITHUB_PATH"
+      - run: dotnet build TrebasiewiczCompanyServer.sln -c Release
