@@ -1,5 +1,6 @@
-# .NET 5 (net5.0, EOL) -- SDK instalowany skryptem dotnet-install, bo obraz
-# runnera to node:22-bookworm (actions/checkout potrzebuje node w kontenerze).
+# Projekt celuje w net5.0 (EOL). SDK 5.0 wymaga libssl1.1, którego Debian
+# bookworm (obraz runnera node:22-bookworm) już nie ma -- budujemy SDK 8.0,
+# który nadal kompiluje net5.0 (ostrzeżenie NETSDK1138 o EOL, nie błąd).
 name: build
 on:
   push:
@@ -14,10 +15,10 @@ jobs:
       DOTNET_ROOT: /root/.dotnet
     steps:
       - uses: actions/checkout@v4
-      - name: .NET 5 SDK
+      - name: .NET SDK 8.0
         run: |
           apt-get update -qq && apt-get install -y -qq libicu-dev >/dev/null
           curl -fsSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
-          bash dotnet-install.sh --channel 5.0 --install-dir /root/.dotnet
+          bash dotnet-install.sh --channel 8.0 --install-dir /root/.dotnet
           echo "/root/.dotnet" >> "$GITHUB_PATH"
       - run: dotnet build TrebasiewiczCompanyServer.sln -c Release
